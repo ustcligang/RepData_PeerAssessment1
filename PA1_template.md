@@ -7,36 +7,64 @@ output:
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 data=read.csv("activity.csv")
 ```
 
 ## What is mean total number of steps taken per day?
-```{r}
+
+```r
 dataSPD=aggregate(data$steps, by=list(date=data$date), FUN=sum)
 names(dataSPD)[2]="steps"
 
 hist(dataSPD$steps,xlab="steps", main="Total number of steps per day")
+```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png)
+
+```r
 print(meanStep)
+```
+
+```
+## Error in print(meanStep): object 'meanStep' not found
+```
+
+```r
 medianStep=median(dataSPD$steps, na.rm=TRUE)
 print(medianStep)
 ```
 
+```
+## [1] 10765
+```
+
 
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 dataComplete=data[complete.cases(data),]
 dataInterval=aggregate(dataComplete$steps, by=list(interval=dataComplete$interval), FUN=mean)
 names(dataInterval)[2]="steps"
 with(dataInterval,plot(interval,steps,type="l"))
 title(main="Number of steps per 5 minutes")
+```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+
+```r
 maxInterval=dataInterval[which.max(dataInterval$steps),1]
 print(maxInterval)
 ```
 
+```
+## [1] 835
+```
+
 ## Imputing missing values
-```{r}
+
+```r
 # 1. total number of missing values
 numberOfNA=nrow(data)-nrow(dataComplete)
 
@@ -53,17 +81,32 @@ for(i in 1:nrow(data)){
 dataSPD=aggregate(dataFill$steps, by=list(date=dataFill$date), FUN=sum)
 names(dataSPD)[2]="steps"
 hist(dataSPD$steps,xlab="steps", main="Total number of steps per day")
+```
 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
+
+```r
 meanStep=mean(dataSPD$steps)
 print(meanStep)
+```
+
+```
+## [1] 9366.345
+```
+
+```r
 medianStep=median(dataSPD$steps)
 print(medianStep)
+```
 
+```
+## [1] 10395
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+
+```r
 #create a new column for weekdays
 dataFill$weekday="weekday"
 
@@ -87,4 +130,6 @@ title(main="weekday")
 with(subset(dataInterval, weekday=="weekend"),plot(interval,steps,type='l'))
 title(main="weekend")
 ```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
 
